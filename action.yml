@@ -18,7 +18,11 @@ inputs:
     description: 'login of sender'
     required: true
     default: ${{ github.event.sender.login }}
-   
+
+branding:
+  icon: 'book'  
+  color: 'gray-dark'
+
 runs:
   using: 'composite'
   steps:
