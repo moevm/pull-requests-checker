@@ -1,6 +1,6 @@
 # action.yml
 name: 'Pull request bot checker for educational process'
-description: 'Check view of pr, such as: name of pr, commits, structure, files and so on'
+description: 'Check view of pull-request by its number'
 inputs:
   number-of-pr:  
     description: 'Number of pull request'
@@ -26,10 +26,5 @@ branding:
 runs:
   using: 'composite'
   steps:
-    - run: |
-        REPO_NAME=${{ inputs.repository-name }}
-        REPO_NAME=${REPO_NAME##*/}
-        # TODO: FIX IT
-        # cp -r /_work/$REPO_NAME/$REPO_NAME/* /repository_files
-        docker run --pull=always --rm --network=host -v ${PR_BOT_CONFIG_PATH}:/config -v ${VOLUME_NAME}:/repository_files mirrin/moevm-pull-requests-checker:latest python3.8 check_pull_request.py ${{ inputs.github-token }} ${{ inputs.number-of-pr }} ${{ inputs.repository-name }} ${{ inputs.author }}
+    - run: echo "Not implemented yet"
       shell: bash
