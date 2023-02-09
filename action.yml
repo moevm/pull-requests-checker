@@ -27,9 +27,6 @@ runs:
   using: 'composite'
   steps:
     - run: |
-        REPO_NAME=${{ inputs.repository-name }}
-        REPO_NAME=${REPO_NAME##*/}
-        # TODO: FIX IT
-        # cp -r /_work/$REPO_NAME/$REPO_NAME/* /repository_files
-        docker run --pull=always --rm --network=host -v ${PR_BOT_CONFIG_PATH}:/config -v ${VOLUME_NAME}:/repository_files mirrin/moevm-pull-requests-checker:latest python3.8 check_pull_request.py ${{ inputs.github-token }} ${{ inputs.number-of-pr }} ${{ inputs.repository-name }} ${{ inputs.author }}
+        cp -r $GITHUB_WORKSPACE/* /repository_files
+        docker run --rm --network=host -v ${PR_BOT_CONFIG_PATH}:/config -v ${VOLUME_NAME}:/repository_files <image_name> python3.8 check_pull_request.py ${{ inputs.github-token }} ${{ inputs.number-of-pr }} ${{ inputs.repository-name }} ${{ inputs.author }}
       shell: bash
