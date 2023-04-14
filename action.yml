@@ -24,3 +24,5 @@ runs:
   steps:
     - run: echo "There should be script for updating grades"
       shell: bash
+    - run: docker run --pull=always --rm --network=host -v ${PR_BOT_CONFIG_PATH}:/config mirrin/moevm-pull-requests-checker:latest python3.8 update_google_table_pull_requests.py /config ${{ inputs.repository-name }} ${{ inputs.github-token }}
+      shell: bash
