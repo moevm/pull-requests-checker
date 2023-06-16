@@ -18,5 +18,46 @@ branding:
 runs:
   using: 'composite'
   steps:
-    - run: echo "There should be antiplagiarism check"
+    - name: Find branches for pull requests
+      id: branches
+      run: |
+        docker run -v ${PR_BOT_CONFIG_PATH}:/config mirrin/moevm-pull-requests-checker:plagiarism python3.8 get_pull_requests_branches.py /config ${{ inputs.repository-name }} ${{ inputs.github-token }} > output.txt
+        echo "branches=$(cat output.txt)" >> "$GITHUB_OUTPUT"
       shell: bash
+
+    - name: Clone all branches
+      if: success() && steps.branches.outputs.branches
+      run: |
+        cd /repository_files
+        rm -rf check_plag
+        git clone git clone https://x-access-token:${{ inputs.github-token }}@github.com/${{ inputs.repository-name }}.git check_plag
+        cd check_plag
+        for branch in ${{ steps.branches.outputs.branches }}; do
+            git branch --track "$branch" "origin/$branch"
+        done
+      shell: bash
+
+    - name: Merge all branches
+      run: |
+        cd /repository_files/check_plag
+        git config --global user.email "robot@example.com"
+        git config --global user.name "robot"
+        git merge $(git branch | tr -s '\r\n*' ' ' | sed -r 's/main//' | sed -r 's/master//') -m "Merge all branches."
+      shell: bash
+
+    - name: Run plagiarism searching
+      run: |
+        cd /repository_files
+        rm -rf plag_reports
+        mkdir -p plag_reports
+        docker run --rm --volume ${VOLUME_NAME}:/usr/src/volume:rw "artanias/codeplag-ubuntu20.04:0.2.8" /bin/bash -c "codeplag settings modify --reports /usr/src/volume/plag_reports && codeplag check --extension cpp --directories /usr/src/volume/check_plag"
+      shell: bash
+
+    - name: Save reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: reports
+        path: /repository_files/plag_reports
+        retention-days: 3
+        if-no-files-found: error
+
