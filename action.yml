@@ -30,7 +30,7 @@ runs:
       run: |
         cd /repository_files
         rm -rf check_plag
-        git clone git clone https://x-access-token:${{ inputs.github-token }}@github.com/${{ inputs.repository-name }}.git check_plag
+        git clone https://x-access-token:${{ inputs.github-token }}@github.com/${{ inputs.repository-name }}.git check_plag
         cd check_plag
         for branch in ${{ steps.branches.outputs.branches }}; do
             git branch --track "$branch" "origin/$branch"
