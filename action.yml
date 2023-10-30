@@ -22,7 +22,7 @@ branding:
 runs:
   using: 'composite'
   steps:
-    - run: echo "There should be script for updating grades"
+    - run: echo "Updating grades"
       shell: bash
-    - run: docker run --pull=always --rm --network=host -v ${PR_BOT_CONFIG_PATH}:/config mirrin/moevm-pull-requests-checker:latest python3.8 update_google_table_pull_requests.py /config ${{ inputs.repository-name }} ${{ inputs.github-token }}
+    - run: docker run --pull=always --rm --network=host -v ${PR_BOT_CONFIG_PATH}:/config -v ${VOLUME_NAME}:/repository_files mirrin/moevm-pull-requests-checker:v2.0.0 update_grades_with_pull_requests -github_token ${{ inputs.github-token }} -repository_name ${{ inputs.repository-name }}
       shell: bash
