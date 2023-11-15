@@ -30,3 +30,7 @@ runs:
         cp -r $GITHUB_WORKSPACE/* /repository_files
         docker run --pull=always --rm --network=host -v ${PR_BOT_CONFIG_PATH}:/config -v ${VOLUME_NAME}:/repository_files mirrin/moevm-pull-requests-checker:v2.0.0 check_pr -github_token ${{ inputs.github-token }} -number_of_pr ${{ inputs.number-of-pr }} -repository_name ${{ inputs.repository-name }}
       shell: bash
+
+    - run: |
+        docker run --pull=always --rm --network=host -v ${PR_BOT_CONFIG_PATH}:/config mirrin/moevm-orgevm-riscv:v1.0.0 ${{ inputs.github-token }} ${{ inputs.repository-name }} ${{ inputs.number-of-pr }} "/config"
+      shell: bash
