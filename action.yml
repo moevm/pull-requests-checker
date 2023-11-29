@@ -32,5 +32,5 @@ runs:
       shell: bash
 
     - run: |
-        docker run --pull=always --rm --network=host -v ${PR_BOT_CONFIG_PATH}:/config mirrin/moevm-orgevm-riscv:v1.0.0 ${{ inputs.github-token }} ${{ inputs.repository-name }} ${{ inputs.number-of-pr }} "/config"
+        docker run --rm --network=host -v ${PR_BOT_CONFIG_PATH}:/config mirrin/moevm-orgevm-riscv:v1.0.0 ${{ inputs.github-token }} ${{ inputs.repository-name }} ${{ inputs.number-of-pr }} "/config"
       shell: bash
