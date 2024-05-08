@@ -26,10 +26,7 @@ branding:
 runs:
   using: 'composite'
   steps:
-    - name: "check"
-      env:
-        version: ${{ vars.BOT_VERSION }}
-      run: |
+    - run: |
         cp -r $GITHUB_WORKSPACE/* /repository_files
-        docker run --pull=always --rm -v ${PR_BOT_CONFIG_PATH}:/config -v ${VOLUME_NAME}:/repository_files mirrin/moevm-pull-requests-checker:$version check_pr -github_token ${{ inputs.github-token }} -number_of_pr ${{ inputs.number-of-pr }} -repository_name ${{ inputs.repository-name }}
+        docker run --pull=always --rm -v ${PR_BOT_CONFIG_PATH}:/config -v ${VOLUME_NAME}:/repository_files mirrin/moevm-pull-requests-checker:2.0.1 check_pr -github_token ${{ inputs.github-token }} -number_of_pr ${{ inputs.number-of-pr }} -repository_name ${{ inputs.repository-name }}
       shell: bash
