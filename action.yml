@@ -23,11 +23,10 @@ branding:
   icon: 'book'  
   color: 'gray-dark'
 
-env:
-  version: ${{ vars.BOT_VERSION }}
-
 runs:
   using: 'composite'
+  env:
+    version: ${{ vars.BOT_VERSION }}
   steps:
     - run: |
         cp -r $GITHUB_WORKSPACE/* /repository_files
