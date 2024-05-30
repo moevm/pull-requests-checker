@@ -24,5 +24,5 @@ runs:
   steps:
     - run: echo "Updating grades"
       shell: bash
-    - run: docker run --pull=always --rm --network=host -v ${PR_BOT_CONFIG_PATH}:/config -v ${VOLUME_NAME}:/repository_files mirrin/moevm-pull-requests-checker:v2.0.0 update_grades_with_pull_requests -github_token ${{ inputs.github-token }} -repository_name ${{ inputs.repository-name }}
+    - run: docker run --rm -v ${PR_BOT_CONFIG_PATH}:/config -v ${VOLUME_NAME}:/repository_files mirrin/moevm-pull-requests-checker:v2.0.0 update_grades_with_pull_requests -github_token ${{ inputs.github-token }} -repository_name ${{ inputs.repository-name }}
       shell: bash
