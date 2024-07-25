@@ -14,10 +14,6 @@ inputs:
     description: 'Full name of repo. Format.: <owner>/<name of repo>'
     required: true
     default: ${{ github.event.repository.full_name }}
-  author:
-    description: 'login of sender'
-    required: true
-    default: ${{ github.event.sender.login }}
 
 branding:
   icon: 'book'  
@@ -26,7 +22,18 @@ branding:
 runs:
   using: 'composite'
   steps:
-    - run: |
-        cp -r $GITHUB_WORKSPACE/* /repository_files
-        docker run --rm -v ${PR_BOT_CONFIG_PATH}:/config -v ${VOLUME_NAME}:/repository_files mirrin/moevm-pull-requests-checker:v2.0.1 check_pr -github_token ${{ inputs.github-token }} -number_of_pr ${{ inputs.number-of-pr }} -repository_name ${{ inputs.repository-name }}
-      shell: bash
+      - run: |
+          PAYLOAD='{
+            "command": "check_pr",
+            "arguments": {
+              "repository_name": "${{ inputs.repository-name }}",
+              "github_token": "${{ inputs.github-token }}",
+              "number_of_pr": "${{ inputs.number-of-pr }}"
+            }
+          }'
+          curl -X 'POST' --fail-with-body \
+            "$SERVER_URL/run_command/" \
+            -H 'accept: application/json' \
+            -H 'Content-Type: application/json' \
+            -d "$PAYLOAD"
+        shell: bash
