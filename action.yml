@@ -22,7 +22,17 @@ branding:
 runs:
   using: 'composite'
   steps:
-    - run: echo "Updating grades"
-      shell: bash
-    - run: docker run --rm -v ${PR_BOT_CONFIG_PATH}:/config -v ${VOLUME_NAME}:/repository_files mirrin/moevm-pull-requests-checker:v2.0.0 update_grades_with_pull_requests -github_token ${{ inputs.github-token }} -repository_name ${{ inputs.repository-name }}
-      shell: bash
+      - run: |
+          PAYLOAD='{
+            "command": "update_grades_with_pull_requests",
+            "arguments": {
+              "repository_name": "${{ inputs.repository-name }}",
+              "github_token": "${{ inputs.github-token }}"
+            }
+          }'
+          curl -X 'POST' \
+            "$SERVER_URL/run_command/" \
+            -H 'accept: application/json' \
+            -H 'Content-Type: application/json' \
+            -d "$PAYLOAD"
+        shell: bash
