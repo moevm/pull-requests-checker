@@ -23,7 +23,6 @@ branding:
   color: 'gray-dark'
 
 runs:
-runs:
   using: 'composite'
   steps:
       - run: |
