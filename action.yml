@@ -35,6 +35,7 @@ runs:
               "number_of_pr": "${{ inputs.number-of-pr }}"
             }
           }'
+          curl --version
           curl -X 'POST' \
             "$SERVER_URL/run_command/" \
             -H 'accept: application/json' \
